@@ -7,6 +7,7 @@ import pjsassy.mbtichatclon.common.httpMessageController.exception.CustomIllegal
 import pjsassy.mbtichatclon.user.domain.User;
 import pjsassy.mbtichatclon.user.dto.DuplicateEmailRequest;
 import pjsassy.mbtichatclon.user.dto.DuplicateLoginIdRequest;
+import pjsassy.mbtichatclon.user.dto.LoginResponse;
 import pjsassy.mbtichatclon.user.dto.UserJoinRequest;
 import pjsassy.mbtichatclon.user.repository.UserRepository;
 
@@ -32,6 +33,16 @@ public class UserService {
     public void duplicateEmail(DuplicateEmailRequest duplicateEmailRequest) {
         userRepository.findByEmail(duplicateEmailRequest)
                 .ifPresent(u -> {throw new CustomIllegalArgumentException(ErrorCode.DUPLICATE_EMAIL);
+                });
+    }
+
+    public void login(LoginResponse loginResponse) {
+    }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    throw new CustomIllegalArgumentException(ErrorCode.NOT_FOUND_USER);
                 });
     }
 }

@@ -12,6 +12,7 @@ import pjsassy.mbtichatclon.common.httpMessageController.code.SuccessCode;
 import pjsassy.mbtichatclon.common.httpMessageController.response.ApiResponse;
 import pjsassy.mbtichatclon.user.dto.DuplicateEmailRequest;
 import pjsassy.mbtichatclon.user.dto.DuplicateLoginIdRequest;
+import pjsassy.mbtichatclon.user.dto.LoginResponse;
 import pjsassy.mbtichatclon.user.dto.UserJoinRequest;
 import pjsassy.mbtichatclon.user.service.UserService;
 
@@ -38,20 +39,23 @@ public class UserController {
 
         return new ResponseEntity(new ApiResponse(SuccessCode.CAN_USE_LOGIN_ID), HttpStatus.OK);
     }
+
     //회원 가입 시 이메일 중복 검사
     @PostMapping("/signup/email")
     public ResponseEntity<ApiResponse> duplicateEmail(
             @Validated @RequestBody DuplicateEmailRequest duplicateEmailRequest) {
         userService.duplicateEmail(duplicateEmailRequest);
-        
+
         return new ResponseEntity(new ApiResponse(SuccessCode.CAN_USE_EMAIL), HttpStatus.OK);
     }
-    //아이디 찾기
-
-    //비밀번호 찾기
 
     //로그인
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> login(LoginResponse loginResponse) {
+        userService.login(loginResponse);
 
+        return new ResponseEntity<>(new ApiResponse(SuccessCode.LOGIN_SUCCESS), HttpStatus.OK);
+    }
     //로그아웃
 
     //마이페이지 조회
@@ -60,7 +64,11 @@ public class UserController {
 
     //비밀번호 수정
 
+    //아이디 찾기
+
+    //비밀번호 찾기
+
     //찾기 이후 비밀번호 변경
 
-    //회원 삭제
+    //회원 탈퇴
 }
