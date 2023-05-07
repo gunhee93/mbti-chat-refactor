@@ -1,27 +1,26 @@
 package pjsassy.mbtichatclon.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import pjsassy.mbtichatclon.common.httpMessageController.code.ErrorCode;
 import pjsassy.mbtichatclon.common.httpMessageController.exception.CustomIllegalArgumentException;
-import pjsassy.mbtichatclon.jwt.response.TokenResponse;
+import pjsassy.mbtichatclon.jwt.dto.TokenResponse;
 
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -85,9 +84,28 @@ public class TokenProvider {
                 .collect(Collectors.toList());
 
         //UserDetails 객체를 만들어서 authentication 리턴
-        new User(claims.getSubject(), "", authorities);
+        UserDetails principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build().parseClaimsJws(token);
+            return true;
+        } catch (SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("토큰이 잘못되었습니다.");
+        }
+
+        return false;
     }
 
     private Claims parseClaims(String accessToken) {
@@ -100,5 +118,15 @@ public class TokenProvider {
             return e.getClaims();
         }
 
+    }
+
+    //accessToken 남은 유효 시간
+    public Long getExpiration(String accessToken) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(key)
+                .build().parseClaimsJws(accessToken).getBody().getExpiration();
+
+        long now = new Date().getTime();
+
+        return (expiration.getTime() - now);
     }
 }

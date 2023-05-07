@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pjsassy.mbtichatclon.common.httpMessageController.code.ErrorCode;
 import pjsassy.mbtichatclon.common.httpMessageController.exception.CustomIllegalArgumentException;
+import pjsassy.mbtichatclon.user.domain.Email;
 import pjsassy.mbtichatclon.user.domain.User;
 import pjsassy.mbtichatclon.user.dto.DuplicateEmailRequest;
 import pjsassy.mbtichatclon.user.dto.DuplicateLoginIdRequest;
@@ -25,13 +26,14 @@ public class UserService {
 
 
     public void duplicateLoginId(DuplicateLoginIdRequest duplicateLoginIdRequest) {
-        userRepository.findByLoginId(duplicateLoginIdRequest)
+        userRepository.findByLoginId(duplicateLoginIdRequest.getLoginId())
                 .ifPresent(u -> {throw new CustomIllegalArgumentException(ErrorCode.DUPLICATE_LOGIN_ID);
                 });
     }
 
     public void duplicateEmail(DuplicateEmailRequest duplicateEmailRequest) {
-        userRepository.findByEmail(duplicateEmailRequest)
+        String email = duplicateEmailRequest.getEmail();
+        userRepository.findByEmail(new Email(email))
                 .ifPresent(u -> {throw new CustomIllegalArgumentException(ErrorCode.DUPLICATE_EMAIL);
                 });
     }

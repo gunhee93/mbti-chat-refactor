@@ -1,4 +1,4 @@
-package pjsassy.mbtichatclon.jwt.response;
+package pjsassy.mbtichatclon.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
