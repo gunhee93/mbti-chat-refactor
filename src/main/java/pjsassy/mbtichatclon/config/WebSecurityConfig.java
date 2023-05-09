@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import pjsassy.mbtichatclon.jwt.TokenProvider;
 import pjsassy.mbtichatclon.jwt.accessRestriction.JwtAccessDeniedHandler;
 import pjsassy.mbtichatclon.jwt.accessRestriction.JwtAuthenticationEntryPoint;
-import pjsassy.mbtichatclon.user.service.RedisUtil;
+import pjsassy.mbtichatclon.common.util.RedisUtil;
 
 @EnableWebSecurity
 @Configuration

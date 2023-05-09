@@ -1,4 +1,4 @@
-package pjsassy.mbtichatclon.user.service;
+package pjsassy.mbtichatclon.common.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

@@ -1,2 +1,39 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: pjsassy0401@gmail.com
+    password: tppevixnakaifyml
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/sassy
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        # show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 100
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+logging.level:
+  org.hibernate.SQL: debug
+
 jwt:
-  secret:
+  secret: 7xc6zv7867sdva7fywefe78sdyf78asyf78aseyf78ysdf8xy8v7yv78ayvd87dfyvadfbdybgWEJF32HJRK3H3JK2KJ;

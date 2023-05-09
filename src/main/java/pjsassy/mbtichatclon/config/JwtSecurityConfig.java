@@ -7,7 +7,7 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pjsassy.mbtichatclon.jwt.JwtFilter;
 import pjsassy.mbtichatclon.jwt.TokenProvider;
-import pjsassy.mbtichatclon.user.service.RedisUtil;
+import pjsassy.mbtichatclon.common.util.RedisUtil;
 
 @RequiredArgsConstructor
 public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {

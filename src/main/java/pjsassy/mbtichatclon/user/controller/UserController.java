@@ -4,16 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pjsassy.mbtichatclon.common.httpMessageController.code.SuccessCode;
 import pjsassy.mbtichatclon.common.httpMessageController.response.ApiResponse;
-import pjsassy.mbtichatclon.user.dto.DuplicateEmailRequest;
-import pjsassy.mbtichatclon.user.dto.DuplicateLoginIdRequest;
-import pjsassy.mbtichatclon.user.dto.LoginResponse;
-import pjsassy.mbtichatclon.user.dto.UserJoinRequest;
+import pjsassy.mbtichatclon.common.util.SecurityUtil;
+import pjsassy.mbtichatclon.user.dto.*;
 import pjsassy.mbtichatclon.user.service.UserService;
 
 @RestController
@@ -51,16 +46,45 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(LoginResponse loginResponse) {
-        userService.login(loginResponse);
+    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
+        LoginResponse loginResponse = userService.login(loginRequest);
 
-        return new ResponseEntity<>(new ApiResponse(SuccessCode.LOGIN_SUCCESS), HttpStatus.OK);
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
+
     //로그아웃
+    @GetMapping("/logout")
+    public ResponseEntity<ApiResponse> logout(
+            @RequestHeader(value = "Authorization") String acTokenRequest,
+            @RequestHeader(value = "RefreshToken") String rfTokenRequest
+    ) {
+        String accessToken = acTokenRequest.substring(7);
+        String refreshToken = rfTokenRequest.substring(7);
+
+        userService.logout(accessToken, refreshToken);
+        return new ResponseEntity<>(new ApiResponse(SuccessCode.LOGOUT_COMPLATE), HttpStatus.OK);
+    }
 
     //마이페이지 조회
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserProfileResponse> getProfile(@PathVariable Long userId) {
+        Long loginUserId = SecurityUtil.getCurrentUserId();
+
+        UserProfileResponse userProfileResponse = userService.getProfile(loginUserId);
+
+        return new ResponseEntity<>(userProfileResponse, HttpStatus.OK);
+    }
 
     //마이페이지 수정
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UpdateProfileResponse> updateProfile(
+            @PathVariable Long userId,
+            @Validated @RequestBody UpdateProfileRequest updateProfileRequest) {
+        Long loginUserId = SecurityUtil.getCurrentUserId();
+        UpdateProfileResponse updateProfileResponse = userService.updateProfile(loginUserId, updateProfileRequest);
+
+        return new ResponseEntity<>(updateProfileResponse, HttpStatus.OK);
+    }
 
     //비밀번호 수정
 

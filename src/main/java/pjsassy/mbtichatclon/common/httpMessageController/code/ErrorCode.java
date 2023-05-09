@@ -21,7 +21,8 @@ public enum ErrorCode {
     DUPLICATE_LOGIN_ID(400, "U001", "중복된 아이디입니다."),
     DUPLICATE_EMAIL(400, "U002", "중복된 이메일입니다."),
     NOT_FOUND_USER(404, "U003", "회원을 찾을 수 없습니다."),
-    NO_INFORMATION(400, "U004", "토큰 정보가 유효하지 않습니다.");
+    INVALID_TOKEN(400, "U005", "토큰 정보가 유효하지 않습니다."),
+    NOT_FOUND_INFORMATION(404, "U006", "토큰에서 유저정보를 찾을 수 없습니다.");
 
     private final int status;
     private final String divisionCode;

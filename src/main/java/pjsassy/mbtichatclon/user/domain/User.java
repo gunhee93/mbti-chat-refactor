@@ -1,11 +1,11 @@
 package pjsassy.mbtichatclon.user.domain;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -56,5 +56,15 @@ public class User {
                 .image(image)
                 .email(email)
                 .build();
+    }
+
+    public void changePassword() {
+    }
+
+    public void updateProfile(String nickname, String email, String mbti, String gender) {
+        this.nickname = nickname;
+        this.email = new Email(email);
+        this.mbti = mbti;
+        this.gender = gender;
     }
 }
