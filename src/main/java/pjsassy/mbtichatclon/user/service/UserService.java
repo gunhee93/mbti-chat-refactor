@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pjsassy.mbtichatclon.common.httpMessageController.code.ErrorCode;
@@ -16,6 +17,7 @@ import pjsassy.mbtichatclon.user.domain.User;
 import pjsassy.mbtichatclon.user.dto.*;
 import pjsassy.mbtichatclon.user.repository.UserRepository;
 
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -25,6 +27,7 @@ public class UserService {
     private final TokenProvider tokenProvider;
     private final RedisUtil redisUtil;
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
 
     @Transactional
     public void signUp(UserJoinRequest userJoinRequest) {
@@ -104,5 +107,77 @@ public class UserService {
 
         return new UpdateProfileResponse(updateProfileRequest.getNickname(), updateProfileRequest.getEmail(),
                 updateProfileRequest.getMbti(), updateProfileRequest.getGender());
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, UpdatePasswordRequest updatePasswordRequest) {
+        User findUser = findById(userId);
+
+        if (!encoder.matches(updatePasswordRequest.getPassword(), findUser.getPassword())) {
+            throw new CustomIllegalArgumentException(ErrorCode.WRONG_PASSWORD);
+        }
+
+        String updatePassword = updatePasswordRequest.getUpdatePassword();
+        findUser.changePassword(encoder.encode(updatePassword));
+    }
+
+    public FindIdResponse findMyId(FindIdRequest findIdRequest) {
+        String redisEmail = redisUtil.getData(findIdRequest.getCode());
+        String email = findIdRequest.getEmail();
+
+        if (!redisEmail.equals(email)) {
+            throw new CustomIllegalArgumentException(ErrorCode.INVALID_CODE);
+        }
+
+        User findUser = userRepository.findByEmail(new Email(email))
+                .orElseThrow(() -> {
+                    throw new CustomIllegalArgumentException(ErrorCode.NOT_FOUND_USER);
+                });
+
+        return new FindIdResponse(findUser.getLoginId());
+    }
+
+    public FindPasswordResponse findMyPassword(FindPasswordRequest findPasswordRequest) {
+        String redisEmail = redisUtil.getData(findPasswordRequest.getCode());
+        String email = findPasswordRequest.getEmail();
+
+        if (!redisEmail.equals(email)) {
+            throw new CustomIllegalArgumentException(ErrorCode.INVALID_CODE);
+        }
+
+        User findUser = userRepository.findByEmail(new Email(email))
+                .orElseThrow(() -> {
+                    throw new CustomIllegalArgumentException(ErrorCode.NOT_FOUND_USER);
+                });
+
+        return new FindPasswordResponse(findUser.getId());
+    }
+
+    @Transactional
+    public LoginResponse afterFindNewPassword(AfterFindNewPasswordRequest afterFindNewPasswordRequest) {
+
+        if (!afterFindNewPasswordRequest.getNewPassword()
+                .equals(afterFindNewPasswordRequest.getNewPasswordCheck())) {
+            throw new CustomIllegalArgumentException(ErrorCode.NO_MATCHES_PASSWORD);
+        }
+
+        User findUser = findById(afterFindNewPasswordRequest.getUserId());
+        findUser.changePassword(encoder.encode(afterFindNewPasswordRequest.getNewPassword()));
+
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                findUser.getLoginId(), afterFindNewPasswordRequest.getNewPassword());
+        Authentication authenticate = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        TokenResponse tokenResponse = tokenProvider.generateTokenDto(authenticate);
+
+        redisUtil.setDataExpire(authenticate.getName(), tokenResponse.getRefreshToken(), 1000 * 60 * 60 * 7);
+
+        return new LoginResponse(findUser.getId(), findUser.getNickname(), tokenResponse);
+    }
+
+    @Transactional
+    public void delete(Long userId) {
+        User findUser = findById(userId);
+        userRepository.delete(findUser);
     }
 }

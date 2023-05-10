@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -58,7 +57,12 @@ public class User {
                 .build();
     }
 
-    public void changePassword() {
+    public void encodingPassword(String password) {
+        this.password = password;
+    }
+
+    public void changePassword(String updatePassword) {
+        this.password = updatePassword;
     }
 
     public void updateProfile(String nickname, String email, String mbti, String gender) {

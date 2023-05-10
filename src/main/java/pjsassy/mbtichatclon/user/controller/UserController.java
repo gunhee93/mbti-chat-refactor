@@ -87,12 +87,44 @@ public class UserController {
     }
 
     //비밀번호 수정
+    @PatchMapping("/{userId}password")
+    public ResponseEntity<ApiResponse> updatePassword(@PathVariable Long userId,
+                                                      @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        Long loginUserId = SecurityUtil.getCurrentUserId();
+        userService.updatePassword(userId, updatePasswordRequest);
+
+        return new ResponseEntity(new ApiResponse(SuccessCode.UPDATE_PASSWORD), HttpStatus.OK);
+    }
 
     //아이디 찾기
+    @PostMapping("/find/id")
+    public ResponseEntity findMyId(@Validated @RequestBody FindIdRequest findIdRequest) {
+        FindIdResponse findIdResponse = userService.findMyId(findIdRequest);
+
+        return new ResponseEntity(findIdResponse, HttpStatus.OK);
+    }
 
     //비밀번호 찾기
+    @PostMapping("/find/password")
+    public ResponseEntity findMyPassword(@Validated @RequestBody FindPasswordRequest findPasswordRequest) {
+        FindPasswordResponse findPasswordResponse = userService.findMyPassword(findPasswordRequest);
+        return new ResponseEntity(findPasswordResponse, HttpStatus.OK);
+    }
 
     //찾기 이후 비밀번호 변경
+    @PatchMapping("/find/password/new")
+    public ResponseEntity<LoginResponse> afterFindNewPassword(
+            @RequestBody AfterFindNewPasswordRequest afterFindNewPasswordRequest) {
+        LoginResponse loginResponse = userService.afterFindNewPassword(afterFindNewPasswordRequest);
+
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+    }
 
     //회원 탈퇴
+    @DeleteMapping("/{userId}")
+    public ResponseEntity deleteUser(@PathVariable Long userId) {
+        Long loginId = SecurityUtil.getCurrentUserId();
+        userService.delete(loginId);
+        return new ResponseEntity(new ApiResponse(SuccessCode.DELETE_USER), HttpStatus.OK);
+    }
 }

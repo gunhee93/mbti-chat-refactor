@@ -22,7 +22,11 @@ public enum ErrorCode {
     DUPLICATE_EMAIL(400, "U002", "중복된 이메일입니다."),
     NOT_FOUND_USER(404, "U003", "회원을 찾을 수 없습니다."),
     INVALID_TOKEN(400, "U005", "토큰 정보가 유효하지 않습니다."),
-    NOT_FOUND_INFORMATION(404, "U006", "토큰에서 유저정보를 찾을 수 없습니다.");
+    NOT_FOUND_INFORMATION(404, "U006", "토큰에서 유저정보를 찾을 수 없습니다."),
+    WRONG_PASSWORD(405, "U007", "기존 비밀번호가 틀렸습니다.."),
+    INVALID_CODE(400, "U008", "인증코드가 틀렸습니다."),
+    NO_MATCHES_PASSWORD(400, "U009", "비밀번호가 일치하지 않습니다."),
+    NO_MATCHES_INFO(400, "U010", "유저 정보가 일치하지 않습니다.");
 
     private final int status;
     private final String divisionCode;
