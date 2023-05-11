@@ -2,12 +2,14 @@ package pjsassy.mbtichatclon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+@EnableJpaAuditing
 @SpringBootApplication
-public class MbtiChatClonApplication {
+public class MbtiChatCloneApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MbtiChatClonApplication.class, args);
+		SpringApplication.run(MbtiChatCloneApplication.class, args);
 	}
 
 }
