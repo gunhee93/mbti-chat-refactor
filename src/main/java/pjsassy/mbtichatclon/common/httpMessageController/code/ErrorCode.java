@@ -27,7 +27,10 @@ public enum ErrorCode {
     INVALID_CODE(400, "U008", "인증코드가 틀렸습니다."),
     NO_MATCHES_PASSWORD(400, "U009", "비밀번호가 일치하지 않습니다."),
     NO_MATCHES_INFO(400, "U010", "유저 정보가 일치하지 않습니다."),
-    NO_INFORMATION(400, "U011", "유저정보가 일치하지 않습니다.");
+    NO_INFORMATION(400, "U011", "유저정보가 일치하지 않습니다."),
+
+    //chat
+    NOT_FOUND_ROOM(404, "C001", "채팅방이 활성화 되지 않았습니다.");
 
     private final int status;
     private final String divisionCode;

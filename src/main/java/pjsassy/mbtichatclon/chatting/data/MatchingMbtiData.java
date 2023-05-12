@@ -1,4 +1,4 @@
-package pjsassy.mbtichatclon.chatting.domain;
+package pjsassy.mbtichatclon.chatting.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

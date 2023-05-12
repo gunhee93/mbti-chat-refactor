@@ -1,12 +1,9 @@
-package pjsassy.mbtichatclon.chatting.domain.message;
+package pjsassy.mbtichatclon.chatting.domain;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pjsassy.mbtichatclon.chatting.domain.chattingroom.ChattingRoom;
 import pjsassy.mbtichatclon.user.domain.User;
 
 import javax.persistence.*;
@@ -14,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "MESSAGE")
 public class Message {
@@ -37,9 +33,8 @@ public class Message {
     @CreatedDate
     private LocalDateTime createdAt;
 
-
     @Builder
-    public Message(ChattingRoom room, User sendUser, String content) {
+    private Message(ChattingRoom room, User sendUser, String content) {
         this.room = room;
         this.sendUser = sendUser;
         this.content = content;
@@ -49,7 +44,6 @@ public class Message {
         return Message.builder()
                 .room(room)
                 .sendUser(sendUser)
-                .content(content)
-                .build();
+                .content(content).build();
     }
 }

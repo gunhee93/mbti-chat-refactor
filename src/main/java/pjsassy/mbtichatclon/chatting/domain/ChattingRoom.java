@@ -1,5 +1,6 @@
-package pjsassy.mbtichatclon.chatting.domain.chattingroom;
+package pjsassy.mbtichatclon.chatting.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pjsassy.mbtichatclon.user.domain.User;
@@ -24,16 +25,15 @@ public class ChattingRoom {
     private User sendUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receive_user_id")
+    @JoinColumn(name = "receiveUser")
     private User receiveUser;
-
 
     public ChattingRoom(User sendUser, User receiveUser) {
         this.sendUser = sendUser;
         this.receiveUser = receiveUser;
     }
 
-    public void enterUser(User receiveUser) {
+    public void enterUser(User receiveUser){
         this.receiveUser = receiveUser;
     }
 }
