@@ -39,5 +39,6 @@ public class MessageService {
         MessageResponse messageResponse = new MessageResponse(
                 room.getId(), user.getId(), content, time, user.getNickname(), savedMessage.getId());
         simpMessageSendingOperations.convertAndSend("/sub/chat/match/" + roomId, messageResponse);
+        System.out.println("테스트입니다");
     }
 }
