@@ -10,12 +10,11 @@ import pjsassy.mbtichatclon.common.httpMessageController.response.ApiResponse;
 import pjsassy.mbtichatclon.common.util.RedisUtil;
 import pjsassy.mbtichatclon.jwt.dto.TokenResponse;
 import pjsassy.mbtichatclon.user.dto.EmailRequest;
-import pjsassy.mbtichatclon.user.service.UserService;
 import pjsassy.mbtichatclon.user.service.UserUtilService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/users")
 public class UserUtilController {
 
     private final RedisUtil redisUtil;
@@ -35,7 +34,7 @@ public class UserUtilController {
     }
 
     //인증 코드 이메일 전송
-    @PostMapping("email")
+    @PostMapping("/email")
     public ResponseEntity<ApiResponse> sendEmail(@Validated @RequestBody EmailRequest emailRequest) {
         userUtilService.sendEmail(emailRequest);
         return new ResponseEntity<>(new ApiResponse(SuccessCode.SEND_EMAIL), HttpStatus.OK);
