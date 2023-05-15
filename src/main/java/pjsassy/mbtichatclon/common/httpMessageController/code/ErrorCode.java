@@ -30,7 +30,10 @@ public enum ErrorCode {
     NO_INFORMATION(400, "U011", "유저정보가 일치하지 않습니다."),
 
     //chat
-    NOT_FOUND_ROOM(404, "C001", "채팅방이 활성화 되지 않았습니다.");
+    NOT_FOUND_ROOM(404, "C001", "채팅방이 활성화 되지 않았습니다."),
+
+    //Post
+    WRONG_CATEGORY(400, "P001", "카테고리 선택이 잘못 되었습니다.");
 
     private final int status;
     private final String divisionCode;
