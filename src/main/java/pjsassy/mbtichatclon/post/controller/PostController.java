@@ -1,14 +1,12 @@
 package pjsassy.mbtichatclon.post.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pjsassy.mbtichatclon.post.dto.CreatePostRequest;
-import pjsassy.mbtichatclon.post.dto.CreatePostResponse;
-import pjsassy.mbtichatclon.post.dto.ViewedListResponse;
-import pjsassy.mbtichatclon.post.dto.ViewedPostDto;
+import pjsassy.mbtichatclon.post.dto.*;
 import pjsassy.mbtichatclon.post.service.PostService;
 
 import java.awt.print.Pageable;
@@ -33,10 +31,20 @@ public class PostController {
     // 게시글 목록 (조회순)
     @GetMapping("/home/viewed")
     public ResponseEntity<ViewedListResponse> postListViewed(
-            @PageableDefault(size = 10, sort = {"id"})Pageable pageable){
+            @PageableDefault(size = 10, sort = {"id"}) Pageable pageable) {
         List<ViewedPostDto> viewedPost = postService.findViewedPost(pageable);
         ViewedListResponse viewedListResponse = new ViewedListResponse(viewedPost);
 
         return new ResponseEntity(viewedListResponse, HttpStatus.OK);
+    }
+
+    // 게시글 목록 (최신순)
+    @GetMapping("/home/newest")
+    public ResponseEntity<NewestListResponse> postListNewest(
+            @PageableDefault(size = 10, sort = {"id"}) Pageable pageable) {
+        List<NewestPostDto> newestPost = postService.findNewestPost(pageable);
+        NewestListResponse newestListResponse = new NewestListResponse(newestPost);
+
+        return new ResponseEntity(newestListResponse, HttpStatus.OK);
     }
 }

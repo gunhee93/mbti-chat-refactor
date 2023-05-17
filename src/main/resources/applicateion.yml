@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    default: local
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -28,12 +31,8 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+jwt:
+  secret: 7xc6zv7867sdva7fywefe78sdyf78asyf78aseyf78ysdf8xy8v7yv78ayvd87dfyvadfbdybgWEJF32HJRK3H3JK2KJ;
 
 logging.level:
   org.hibernate.SQL: debug
-
-jwt:
-  secret: 7xc6zv7867sdva7fywefe78sdyf78asyf78aseyf78ysdf8xy8v7yv78ayvd87dfyvadfbdybgWEJF32HJRK3H3JK2KJ;

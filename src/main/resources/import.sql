@@ -1,0 +1,2 @@
+--Insert into Category values (1, '자유게시판')
+--Insert into Category values (2, '모임')

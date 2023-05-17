@@ -9,6 +9,7 @@ import pjsassy.mbtichatclon.common.httpMessageController.exception.CustomIllegal
 import pjsassy.mbtichatclon.post.domain.Category;
 import pjsassy.mbtichatclon.post.domain.Post;
 import pjsassy.mbtichatclon.post.dto.CreatePostRequest;
+import pjsassy.mbtichatclon.post.dto.NewestPostDto;
 import pjsassy.mbtichatclon.post.dto.ViewedPostDto;
 import pjsassy.mbtichatclon.post.repository.CategoryRepository;
 import pjsassy.mbtichatclon.post.repository.PostRepository;
@@ -48,6 +49,16 @@ public class PostService {
         Page<Post> findViewedPost = postRepository.findAllByViewed(pageable);
 
         return findViewedPost.stream().map(p -> new ViewedPostDto(
+                p.getId(), p.getTitle(), p.getUser().getNickname(), p.getCategory().getName(),
+                p.getCreatedAt().format(DateTimeFormatter.ofPattern("MM dd HH:mm"))
+        )).collect(Collectors.toList());
+    }
+
+    public List<NewestPostDto> findNewestPost(Pageable pageable) {
+
+        Page<Post> findNewestPost = postRepository.findAllByNewest(pageable);
+
+        return findNewestPost.stream().map(p -> new NewestPostDto(
                 p.getId(), p.getTitle(), p.getUser().getNickname(), p.getCategory().getName(),
                 p.getCreatedAt().format(DateTimeFormatter.ofPattern("MM dd HH:mm"))
         )).collect(Collectors.toList());
