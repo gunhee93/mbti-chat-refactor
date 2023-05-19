@@ -28,6 +28,8 @@ public class PostController {
         return new ResponseEntity(createPostResponse, HttpStatus.OK);
     }
 
+
+
     // 게시글 목록 (조회순)
     @GetMapping("/home/viewed")
     public ResponseEntity<ViewedListResponse> postListViewed(
